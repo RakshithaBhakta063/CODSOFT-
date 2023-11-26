@@ -1,45 +1,48 @@
-# Program for a simple calculator
+import tkinter as tk
 
-def add(x, y):
-    return x + y
-
-def subtract(x, y):
-    return x - y
-
-def multiply(x, y):
-    return x * y
-
-def divide(x, y):
-    if y != 0:
-        return x / y
+def on_click(button_text):
+    current_text = entry.get()
+    
+    if button_text == "=":
+        try:
+            result = eval(current_text)
+            entry.delete(0, tk.END)
+            entry.insert(tk.END, str(result))
+        except Exception as e:
+            entry.delete(0, tk.END)
+            entry.insert(tk.END, "Error")
+    elif button_text == "C":
+        entry.delete(0, tk.END)
     else:
-        return "Cannot divide by zero."
+        entry.insert(tk.END, button_text)
 
-print("Select operation.")
-print("1. Add")
-print("2. Subtract")
-print("3. Multiply")
-print("4. Divide")
+# Create the main window
+root = tk.Tk()
+root.title("Simple Calculator")
 
-while True:
-    choice = input("Enter choice (1/2/3/4): ")
+# Entry widget for display
+entry = tk.Entry(root, width=20, font=('Arial', 14))
+entry.grid(row=0, column=0, columnspan=4)
 
-    if choice in ('1', '2', '3', '4'):
-        num1 = float(input("Enter first number: "))
-        num2 = float(input("Enter second number: "))
+# Define buttons
+buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+',
+    'C'
+]
 
-        if choice == '1':
-            print(num1, "+", num2, "=", add(num1, num2))
-        elif choice == '2':
-            print(num1, "-", num2, "=", subtract(num1, num2))
-        elif choice == '3':
-            print(num1, "*", num2, "=", multiply(num1, num2))
-        elif choice == '4':
-            print(num1, "/", num2, "=", divide(num1, num2))
+# Add buttons to the grid
+row_val = 1
+col_val = 0
+for button in buttons:
+    tk.Button(root, text=button, padx=20, pady=20, font=('Arial', 12),
+              command=lambda b=button: on_click(b)).grid(row=row_val, column=col_val)
+    col_val += 1
+    if col_val > 3:
+        col_val = 0
+        row_val += 1
 
-        next_calculation = input("Do you want to do another calculation? (yes/no): ")
-        if next_calculation.lower() != "yes":
-            break
-
-    else:
-        print("Invalid Input")
+# Run the application
+root.mainloop()
